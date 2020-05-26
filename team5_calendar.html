@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>予約システム</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="team5_calendar.js"></script>
+<link rel="stylesheet" href="team5_calendar.css">
+</head>
+
+<body>
+<header class="header">
+	
+	　<h1 class="logo" id="room_name"></h1>
+	
+</header>
+<div class = screenmonthly>
+<form name="fym">
+<table class = "monthly"><tr><th>
+<select name="syear" onChange="change_cal()"></select>年
+<select name="smon" onChange="change_cal()"></select>月
+</th></tr>
+<tr><th>
+<input type="button" value="≪" onClick="change_month(-12)">
+<input type="button" value="←" onClick="change_month(-1)">
+<input type="button" value="今月" onClick="change_form(year,mon)">
+<input type="button" value="→" onClick="change_month(1)">
+<input type="button" value="≫" onClick="change_month(12)">
+</th></tr>
+<tr><th>
+<div class="calender">
+<div id="calendar";></div>
+</div>
+</th></tr>
+</table>
+</form>
+</div>
+
+<div class = "screenweekly">
+    <table class = "weekly">
+        <tr class = "dateSlideTable">
+          <th class="time"></th>
+          <th class="date"></th>
+          <th class="date"></th>
+          <th class="date"></th>
+          <th class="date"></th>
+          <th class="date"></th>
+          <th class="date"></th>
+          <th class="date"></th>
+        </tr>
+        <tr class = "time_9">
+			<th>9時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+        </tr>
+        <tr class = "time_10">
+			<th>10時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_11">
+			<th>11時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_12">
+			<th>12時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_13">
+			<th>13時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_14">
+			<th>14時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_15">
+			<th>15時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_16">
+			<th>16時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_17">
+			<th>17時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+		<tr class = "time_18">
+			<th>18時</th>
+			<td id="day_0"></td> <td id="day_1"></td> <td id="day_2"></td> <td id="day_3"></td>
+			<td id="day_4"></td> <td id="day_5"></td> <td id="day_6"></td>
+		</tr>
+        
+      </table>
+</div>
+
+<script type="text/javascript">
+	//遷移元（会議室選択）のデータをもらう
+	var query = location.search;
+    var value = query.split('=');
+	console.log(value[1]);
+	room = value[1];
+	//alert("ここは会議室" + value[1] + "の予約画面です");
+	$('#room_name').text(function(){return "会議室" + room + "　予約画面";});
+
+	//日付と時間の設定
+	now = new Date();
+	year = now.getYear();
+	if (year < 1900) year += 1900;
+	mon = now.getMonth()+1;
+	day = now.getDate();
+	you = now.getDay();
+
+	//曜日の選択肢
+	youbi = new Array("日","月","火","水","木","金","土");
+	youbi_color = new Array("ff0000","","","","","","0000ff");
+
+	//年数の範囲
+	h_year = 100;
+
+	//表示の設定
+	today = year + "年" + mon + "月" + day + "日" + "(<font color='" + youbi_color[you] + "'>" + youbi[you] + "</font>)";
+
+	//画面に表示
+	//document.write(today);
+	//document.write("<hr>");
+
+	setOption();
+
+
+	now_select_date = now;
+	//現在選択されている日付
+	var nowyear = year;
+	var nowmonth = mon;
+	var nowday = day;
+	weekly_change(now_select_date);
+
+	view_cal(year,mon);
+	reflectReservation();
+	//sheetDBtest();
+
+</script>
+
+
+
+<!--produced by www.shurey.com-->
+</body>
+</html>

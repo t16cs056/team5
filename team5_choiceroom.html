@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>会議室選択画面</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="team5_choiceroom.js"></script>
+<link rel="stylesheet" href="team5_choiceroom.css">
+</head>
+
+<body>
+    <!--<div style="width:100px;heifht:80px;background:#ced;border:1px solid #a7e;">-->
+        <div class ="kaigiyoyaku">
+            <p>予約したい会議室を選択してください</p>
+            <div class=room>
+                <input type="button" name="kaigisituA" value="会議室A&#13;&#10;定員10名" onclick="choiceroom('A')">
+                <input type="button" name="kaigisituB" value="会議室B&#13;&#10;定員20名" onclick="choiceroom('B')">
+                <input type="button" name="kaigisituC" value="会議室C&#13;&#10;定員30名" onclick="choiceroom('C')">
+                <input type="button" name="kaigisituD" value="会議室D&#13;&#10;定員40名" onclick="choiceroom('D')">
+                <input type="button" name="kaigisituE" value="会議室E&#13;&#10;定員50名" onclick="choiceroom('E')">
+                <input type="button" name="kaigisituF" value="会議室F&#13;&#10;定員60名" onclick="choiceroom('F')">
+            </div>
+                <div class = icon1>
+                    <img src="image.png" onclick="choiceroom('A')"/>
+                <i class="fa fa-thumbs-o-up" aria-hidden="false"></i>
+                </div>
+        
+                <div class = icon2>
+                    <img src="image.png" onclick="choiceroom('B')"/>
+                <i class="fa fa-thumbs-o-up" aria-hidden="false"></i>
+                </div>
+                <div class = icon3>
+                    <img src="image.png" onclick="choiceroom('E')"/>
+                <i class="fa fa-thumbs-o-up" aria-hidden="false"></i>
+                </div>
+    
+                <!--
+        <div>
+        <div class="sample-box">
+            <input type="button" name="roomA" value="会議室A" onclick="choiceroom('A')" style="width:150px;height:100px;padding:10px;font-size:20px;">
+        
+            <img src="image.png" onclick="choiceroom('A')" class = "projector"/>
+        </div>
+        <div class="sample-box" float: left;>
+            <input type="button" name="roomA" value="会議室B" onclick="choiceroom('B')" style="width:150px;height:100px;padding:10px;font-size:20px;">
+        
+            <img src="image.png" onclick="choiceroom('B')" class = "projector"/>
+        </div>
+        <div class="sample-box">
+            <input type="button" name="roomA" value="会議室C" onclick="choiceroom('C')" style="width:150px;height:100px;padding:10px;font-size:20px;">
+        
+            <img src="image.png" onclick="choiceroom('C')" class = "projector"/>
+        </div>
+        <div class="sample-box">
+            <input type="button" name="roomA" value="会議室D" onclick="choiceroom('D')" style="width:150px;height:100px;padding:10px;font-size:20px;">
+        
+        </div>
+        <div class="sample-box">
+            <input type="button" name="roomA" value="会議室E" onclick="choiceroom('E')" style="width:150px;height:100px;padding:10px;font-size:20px;">
+        
+        </div>
+        <div class="sample-box">
+            <input type="button" name="roomA" value="会議室F" onclick="choiceroom('F')" style="width:150px;height:100px;padding:10px;font-size:20px;">
+        
+        </div>
+    </div>
+            -->
+</body>

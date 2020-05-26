@@ -1,0 +1,37 @@
+body{
+    background-color: lavender;
+}
+.header{
+    background-color: antiquewhite;
+    width: 100%;
+}
+.screenmonthly{
+    display: inline-block;
+}
+table.monthly{
+    border-collapse: collapse;
+    width: 100%;
+    height: 100%;
+}
+table.monthly th, table.monthly td{
+    border: solid 1px black;
+    background-color: skyblue;  
+}
+/* table.thclander{
+    height: 50px;
+} */
+.calender{
+    width: 100%;
+    height: 215.2px;
+}
+.screenweekly{
+    display: inline-block;
+}
+table.weekly{
+    border-collapse: collapse;
+    width: 1000px;
+}
+table.weekly th, table.weekly td{
+    border: solid 1px black;
+    background-color: white;
+}
