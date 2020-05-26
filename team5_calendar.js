@@ -124,7 +124,7 @@ function changeBackColor(matchdata){
 	firstday = new Date();
 	firstday.setFullYear(nowyear);
 	firstday.setMonth(nowmonth-1);
-	firstday.setDate(nowday);
+	firstday.setgDate(nowday);
 	firstday.setHours(10);
 	firstday.setMinutes(00);
 	//デバッグ用　予定がある日付の開始時間
@@ -175,13 +175,13 @@ function changeBackColor(matchdata){
 	//console.log(selector);
 
 	//会議の時間計算
-	var time_dif = Math.round((changeday_finish-changeday)/(1000*60*60));
+	var time_dif = Math.round((changeday_finish-changeday)/(1000*30*60));
 	//console.log(time_dif);
 	
 	//for文を使って表示
-	for(var i = 0; i < time_dif; i++){
+	for(var i = 0; i < time_dif; i += 0.5){
 		var selector = ".time_";
-		selector += (changeday.getHours()+i) + " #day_" + day_dif;
+		selector += (changeday.getHours()+i)*100 + " #day_" + day_dif;
 		
 		console.log(selector);
 		$(selector).css('background-color', '#FF1111');
@@ -285,204 +285,8 @@ function reflectReservation(){
 	
 }
 
-//予約の時間帯が被っているか確認
-function checkDuplication(click_date, click_time){
-	return new Promise((resolve,reject) => {
-		console.log("データ持ってきて判定します");
-		
-		//console.log(click_date); //クリックしたところの日付　
-		//console.log(click_time); //時刻のみ　例えば「9」
-		//POSTしてよければtrue
-		var POST_OK = true;
-		//YMDと会議室を指定して情報をGET
-		// リクエスト先URL
-		var url = "https://sheetdb.io/api/v1/h1suyadjlg423/search?room=" + room + "&year=" + click_date.getFullYear() 
-				+ "&month=" + (click_date.getMonth()+1) + "&day=" + click_date.getDate();
-		//console.log(url);
-		var request = new XMLHttpRequest();
-		request.open('GET', url);
-		request.onreadystatechange = function (obj) {
-			if (request.readyState != 4) {
-				// リクエスト中
-				//console.log("もらってきます！");
-			} else if (request.status != 200) {
-				// 失敗
-				console.log(request.status);
-				console.log("もらえませんでした・・・");
-			} else {
-				// 取得成功
-				console.log(request.responseText);
-				var json = request.responseText;
-				var obj = JSON.parse(json);
-
-				var select_start = new Date();
-				select_start.setFullYear(click_date.getFullYear());
-				select_start.setMonth(click_date.getMonth());
-				select_start.setDate(click_date.getDate());
-				select_start.setHours(click_time);
-				select_start.setMinutes(0); 
-				select_start.setSeconds(0);
-
-				var select_end = new Date();
-				select_end.setFullYear(select_start.getFullYear());
-				select_end.setMonth(select_start.getMonth());
-				select_end.setDate(select_start.getDate());
-				select_end.setHours(select_start.getHours() + 3);
-				select_end.setMinutes(0); 
-				select_end.setSeconds(0);
-				var date_select = {
-					start: select_start,
-					end: select_end,
-				}
-				console.log("被り確認");
-				console.log(date_select.start);
-				console.log(date_select.end);
-				for(var i=0;i<obj.length;i++){
-					console.log(i + "番目");
-					
-					var reserved_start = new Date();
-					reserved_start.setFullYear(obj[i].year);
-					reserved_start.setMonth(obj[i].month-1);
-					reserved_start.setDate(obj[i].day);
-					reserved_start.setHours(obj[i].start_hour);
-					reserved_start.setMinutes(obj[i].start_minute); 
-					reserved_start.setSeconds(0);
-
-					var reserved_end = new Date();
-					reserved_end.setFullYear(reserved_start.getFullYear());
-					reserved_end.setMonth(reserved_start.getMonth());
-					reserved_end.setDate(reserved_start.getDate());
-					reserved_end.setHours(obj[i].end_hour);
-					reserved_end.setMinutes(obj[i].end_minute); 
-					reserved_end.setSeconds(0);
-					//予約されている日付のデータ
-					var date_reserved = {
-						start: reserved_start,
-						end: reserved_end,
-					}
-					console.log( date_select.start <= date_reserved.end && date_select.end >= date_reserved.start );
-
-					if(date_select.start <= date_reserved.end && date_select.end >= date_reserved.start){
-						console.log(obj[i] + "と被ってます・・・")
-						POST_OK = false;
-						//console.log(POST_OK);
-					}
-				}
-			}
-		};
-		request.send(null);
-		console.log(POST_OK);
-		//return POST_OK;
-        resolve(POST_OK);
-    })
-
-	//console.log(click_date); //クリックしたところの日付　
-	//console.log(click_time); //時刻のみ　例えば「9」
-	//POSTしてよければtrue
-	var POST_OK = 0;
-	//YMDと会議室を指定して情報をGET
-	// リクエスト先URL
-	var url = "https://sheetdb.io/api/v1/h1suyadjlg423/search?room=" + room + "&year=" + click_date.getFullYear() 
-			+ "&month=" + (click_date.getMonth()+1) + "&day=" + click_date.getDate();
-	//console.log(url);
-	var request = new XMLHttpRequest();
-	request.open('GET', url);
-	request.onreadystatechange = function (obj) {
-    	if (request.readyState != 4) {
-        	// リクエスト中
-			//console.log("もらってきます！");
-    	} else if (request.status != 200) {
-        	// 失敗
-			console.log(request.status);
-			console.log("もらえませんでした・・・");
-    	} else {
-        	// 取得成功
-			console.log(request.responseText);
-			var json = request.responseText;
-			var obj = JSON.parse(json);
-
-			var select_start = new Date();
-			select_start.setFullYear(click_date.getFullYear());
-			select_start.setMonth(click_date.getMonth());
-			select_start.setDate(click_date.getDate());
-			select_start.setHours(click_time);
-			select_start.setMinutes(0); 
-			select_start.setSeconds(0);
-
-			var select_end = new Date();
-			select_end.setFullYear(select_start.getFullYear());
-			select_end.setMonth(select_start.getMonth());
-			select_end.setDate(select_start.getDate());
-			select_end.setHours(select_start.getHours() + 3);
-			select_end.setMinutes(0); 
-			select_end.setSeconds(0);
-			var date_select = {
-				start: select_start,
-				end: select_end,
-			}
-			console.log("被り確認");
-			console.log(date_select.start);
-			console.log(date_select.end);
-			for(var i=0;i<obj.length;i++){
-				console.log(i + "番目");
-				
-				var reserved_start = new Date();
-				reserved_start.setFullYear(obj[i].year);
-				reserved_start.setMonth(obj[i].month-1);
-				reserved_start.setDate(obj[i].day);
-				reserved_start.setHours(obj[i].start_hour);
-				reserved_start.setMinutes(obj[i].start_minute); 
-				reserved_start.setSeconds(0);
-
-				var reserved_end = new Date();
-				reserved_end.setFullYear(reserved_start.getFullYear());
-				reserved_end.setMonth(reserved_start.getMonth());
-				reserved_end.setDate(reserved_start.getDate());
-				reserved_end.setHours(obj[i].end_hour);
-				reserved_end.setMinutes(obj[i].end_minute); 
-				reserved_end.setSeconds(0);
-				//予約されている日付のデータ
-				var date_reserved = {
-					start: reserved_start,
-					end: reserved_end,
-				}
-				
-				//console.log(date_reserved.start);
-				//console.log(date_reserved.end);
-				console.log( date_select.start <= date_reserved.end && date_select.end >= date_reserved.start );
-				//console.log( date_select.start <= date_reserved.end);
-				//console.log( date_select.end >= date_reserved.start);
-
-				if(date_select.start <= date_reserved.end && date_select.end >= date_reserved.start){
-					console.log(obj[i] + "と被ってます・・・")
-					POST_OK = 1;
-					console.log(POST_OK);
-					return false;
-				}
-				/*
-				if(i+1 == obj.length){
-					POST_OK=2;
-					console.log(POST_OK);
-					return false;				
-				}
-				*/
-			}
-			
-		}
-	};
-	request.send(null);
-	/*
-	setTimeout(() => {
-		console.log("return " + POST_OK);
-		return false;
-	  }, 3000)
-	  */
-	console.log(POST_OK);
-	return POST_OK;
-}
-
 //予約を行う（POSTする）
-function postReservation(click_date, click_time){
+function postReservation(click_date, click_time, click_minute){
 	/*
 	curl -X POST -H "Content-Type: application/json" https://sheetdb.io/api/v1/9nqj04481ql3u -d 
 	"{\"data\":[{ \"id\": \"100\", \"room\": \"A\", \"year\": \"2020\", \"month\": \"9\", \"day\": \"1\"
@@ -490,47 +294,32 @@ function postReservation(click_date, click_time){
 	*/
 	//var data = '{"data":[{"id":"500","room":"A","year":"2021","month":"1","day":"1","start_hour":"14","start_minute":"0","end_hour":"17","end_minute":"20"}]}';
 	//var data = '';
+	var postdata = '{"data":[{"id":"yanagitest","room":"' + room + '","year":"' + click_date.getFullYear() + '","month":"' + (click_date.getMonth()+1) + 
+	'","day":"' + click_date.getDate() + '","start_hour":"' + click_time + '","start_minute":"'+click_minute+'","end_hour":"' + (parseInt(click_time)+1) + '","end_minute":"0"}]}';
+	console.log(postdata);
+	var url = "https://sheetdb.io/api/v1/h1suyadjlg423"; // リクエスト先URL
+	var data = postdata; // 送信データ ('param=value&...')
+	var request = new XMLHttpRequest();
+	request.open('POST', url);
+	console.log(request);
+	0
+	request.onreadystatechange = function () {
+		if (request.readyState != 4) {
+			// リクエスト中
+		} else if (request.status != 201) {
+			// 失敗
+			console.log(request);
+			console.log("送信できませんでした・・・");
+		} else {
+			// 送信成功
+			// var result = request.responseText;
+			console.log("送信できました！");	
+			reflectReservation();
+		}
+	};
+	request.setRequestHeader('Content-Type', 'application/json');
+	request.send(data);
 
-	checkDuplication(click_date,click_time)
-	.then((response) =>{
-		//POST処理
-		console.log("最終的な結果は "+response);
-		console.log("最終結果をもとにここでPOSTする");
-	}
-	)
-
-
-	//var flag = checkDuplication(click_date, click_time);
-	if(false){
-		var postdata = '{"data":[{"id":"yanagitest","room":"' + room + '","year":"' + click_date.getFullYear() + '","month":"' + (click_date.getMonth()+1) + 
-		'","day":"' + click_date.getDate() + '","start_hour":"' + click_time + '","start_minute":"0","end_hour":"' + (parseInt(click_time)+1) + '","end_minute":"0"}]}';
-		console.log(postdata);
-		var url = "https://sheetdb.io/api/v1/h1suyadjlg423"; // リクエスト先URL
-		var data = postdata; // 送信データ ('param=value&...')
-		var request = new XMLHttpRequest();
-		request.open('POST', url);
-		console.log(request);
-		
-		request.onreadystatechange = function () {
-			if (request.readyState != 4) {
-				// リクエスト中
-			} else if (request.status != 201) {
-				// 失敗
-				console.log(request);
-				console.log("送信できませんでした・・・");
-			} else {
-				// 送信成功
-				// var result = request.responseText;
-				console.log("送信できました！");	
-				reflectReservation();
-			}
-		};
-		request.setRequestHeader('Content-Type', 'application/json');
-		request.send(data);
-	}else{
-		console.log("その時間帯は既に会議が存在しています！");
-		//alert("その時間帯は既に会議が存在しています！");
-	}
 	
 }
 
@@ -584,6 +373,9 @@ script.addEventListener('load', function() {
 		var click_time = eventClass.replace( "time_" , "" ); //数字のみ抜き出し
 		//console.log("time:" + click_time);
 
+		var click_minute = eventClass.replace( "minute_" , "" ); //数字のみ抜き出し
+		//console.log("time:" + click_minute);
+
 		//console.log(now_select_date); //現在表示されている日付の最後の日付+1日目
 		//ここでの表示に必要なので日付を作る
 		click_date = new Date();
@@ -594,19 +386,11 @@ script.addEventListener('load', function() {
 		//console.log(click_date);
 		
 		
-		var result = confirm(click_date.getFullYear() + "年 " + (click_date.getMonth()+1) + "月 " + click_date.getDate() + "日 " + click_time + '時 00分 から会議を' + '予約しますか？');
-		
-		if(result){													//trueの処理			
-			if(eventHTML.length > 2){
-				//alert(click_date.getFullYear() + "年" + (click_date.getMonth()+1) + "月" + click_date.getDate() + "日" + click_time + '時がクリックされました！');
-			}else{
-				//alert(click_date.getFullYear() + "年" + (click_date.getMonth()+1) + "月" + click_date.getDate() + "日" + click_time + '時がクリックされました！');
-				
-			}
-			console.log(click_date.getFullYear() + "年" + (click_date.getMonth()+1) + "月" + click_date.getDate() + "日" + click_time + '時がクリックされました！');
-			postReservation(click_date, click_time);	
+		var result = confirm(click_date.getFullYear() + "年 " + (click_date.getMonth()+1) + "月 " + click_date.getDate() + "日 " + click_time + '時' + click_minute + '分' + 'から会議を' + '予約しますか？');
+		if(!confirm){
+			return false;
 		}else{
-			console.log('予約に失敗しました');
+			location.href = "team5_timeoption.html"
 		}
 		
 	})
